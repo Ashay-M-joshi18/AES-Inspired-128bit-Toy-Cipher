@@ -1,41 +1,61 @@
-from ecb import encrypt_ecb, decrypt_ecb
+import ecb
 
-def test_single_block():
-    message = "HELLO_AES_TEST!"
-    key = "THIS_IS_16_KEY"
+def test_encrypt_decrypt():
+    key = "0123456789abcdef"  # 16 char key
 
-    cipher = encrypt_ecb(message, key)
-    plain = decrypt_ecb(cipher, key)
+    # Normal test cases
+    normal_cases = [
+        "Hello World",  # short
+        "This is a test message for AES ECB encryption.",  # longer
+        "A" * 16,  # exact block
+        "A" * 15,  # one less
+        "A" * 17,  # one more
+        "Special chars: !@#$%^&*()",  # special chars
+        "12345678901234567890123456789012",  # 32 chars
+    ]
 
-    assert plain.strip() == message
-    print("✅ Single-block test passed")
+    for i, message in enumerate(normal_cases, 1):
+        try:
+            encrypted = ecb.encrypt_ecb(message, key)
+            decrypted = ecb.decrypt_ecb(encrypted, key)
+            assert message == decrypted, f"Round trip failed: Original '{message[:20]}...', Decrypted '{decrypted[:20]}...'"
+            print(f"Test {i} passed: '{message[:20]}...' round trip successful")
+        except Exception as e:
+            print(f"Test {i} failed: {e}")
 
+    # Edge cases that should raise exceptions
+    # For empty message, encrypt should raise
+    try:
+        ecb.encrypt_ecb("", key)
+        print("Test 8 failed: Should have raised ValueError for empty message")
+    except ValueError as e:
+        print(f"Test 8 passed: {e}")
+    except Exception as e:
+        print(f"Test 8 failed: Wrong exception {e}")
 
-def test_multi_block():
-    message = "AES inspired cipher built for educational purposes"
-    key = "THIS_IS_16_KEY"
+    # For invalid ciphertext, decrypt should raise
+    try:
+        ecb.decrypt_ecb("invalid", key)
+        print("Test 9 failed: Should have raised exception for invalid ciphertext")
+    except Exception as e:
+        print(f"Test 9 passed: {e}")
 
-    cipher = encrypt_ecb(message, key)
-    plain = decrypt_ecb(cipher, key)
+    # For ciphertext not multiple of 32
+    try:
+        ecb.decrypt_ecb("a" * 30, key)
+        print("Test 10 failed: Should have raised ValueError for length not multiple of 32")
+    except ValueError as e:
+        print(f"Test 10 passed: {e}")
+    except Exception as e:
+        print(f"Test 10 failed: Wrong exception {e}")
 
-    assert plain.strip() == message
-    print("✅ Multi-block test passed")
-
-
-def test_empty_string():
-    message = ""
-    key = "THIS_IS_16_KEY"
-
-    cipher = encrypt_ecb(message, key)
-    plain = decrypt_ecb(cipher, key)
-
-    assert plain.strip() == message
-    print("✅ Empty-string test passed")
-
+    # For non-hex ciphertext
+    try:
+        ecb.decrypt_ecb("gggggggggggggggggggggggggggggggg", key)  # 32 chars but not hex
+        print("Test 11 failed: Should have raised exception for non-hex")
+    except Exception as e:
+        print(f"Test 11 passed: {e}")
 
 if __name__ == "__main__":
-    print("Running tests...\n")
-    test_single_block()
-    test_multi_block()
-    test_empty_string()
-    print("\n🎉 All tests passed successfully")
+    test_encrypt_decrypt()
+    
