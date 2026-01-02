@@ -53,6 +53,7 @@ def rep(S):
         matrix.append([vals[j * 4 + i] for j in range(4)])
     return matrix
 
+# ---------- MATRIX <-> STRING / HEX ----------
 
 def deb_bck(matrix, hex_output=False):
     if not hex_output:
@@ -122,30 +123,10 @@ def getMixColumns(state):
         for j in range(4):
             temp = 0
             for k in range(4):
-                temp ^= gf_mul(state[i][k], gf[k][j])
-            out[i][j] = temp
+                temp ^= gf_mul(gf[j][k], state[k][i])
+            out[j][i] = temp
     return out
 
-
-# ---------- SHIFT COLUMNS ----------
-
-def shift_col(new_mat):
-    temp_mat = []
-    for i in range(4):
-        col = []
-        for j in range(4):
-            col.append(new_mat[j][i])
-        col = rotate(col, i)
-        temp_mat.append(col)
-
-    sf_mat = []
-    for i in range(4):
-        row = []
-        for j in range(4):
-            row.append(temp_mat[j][i])
-        sf_mat.append(row)
-
-    return sf_mat
 
 
 # ---------- ADD ROUND KEY ----------
@@ -176,8 +157,8 @@ def inv_mix_columns(state):
         for j in range(4):
             temp = 0
             for k in range(4):
-                temp ^= gf_mul(state[i][k], gf[k][j])
-            out[i][j] = temp
+                temp ^= gf_mul(gf[j][k], state[k][i])
+            out[j][i] = temp
     return out
 
 
@@ -191,6 +172,8 @@ def hex_to_matrix(hex_str):
         mat.append([bytes_list[j * 4 + i] for j in range(4)])
     return mat
 
+# ---------- FORM WORDS FROM ROUND KEY ----------
+
 def form_words(Round_key,column):
     word = []
     word.append(Round_key[0][column])
@@ -199,6 +182,8 @@ def form_words(Round_key,column):
     word.append(Round_key[3][column])
     return word
 
+# ---------- ADD RCON ----------
+# values referenced from FIPS-197
 
 Rcon = [0x01, 0x02, 0x04, 0x08,0x10,0x20,0x40, 0x80,0x1B, 0x36]
 
