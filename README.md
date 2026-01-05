@@ -1,7 +1,7 @@
 AES-Inspired 128-bit Toy Cipher (ECB Mode)
 Overview
 This project is an educational, AES-inspired 128-bit block cipher implemented in Python.
-It closely follows the structural design of AES-128 (state representation, round structure, key expansion, and transformations) while intentionally simplifying certain aspects for learning purposes.
+It closely follows the structural design of AES-128 (state StringToMatrix representation, round structure, key expansion, and transformations) while intentionally simplifying certain aspects for learning purposes.
 The implementation supports ECB (Electronic Codebook) mode and includes both encryption and decryption, along with input validation and test coverage.
 Project Goals
 Understand the internal working of AES-like block ciphers

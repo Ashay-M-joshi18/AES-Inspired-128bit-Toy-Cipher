@@ -1,4 +1,4 @@
-from core import hex_to_matrix, deb_bck
+from core import hex_to_matrix, MatrixToHex
 from key_schedule import generate_round_key
 
 # Initial key in hex: 2b 7e 15 16 28 ae d2 a6 ab f7 15 88 09 cf 4f 3c
@@ -12,5 +12,5 @@ all_round_keys = generate_round_key(key_matrix)
 
 # Print each round key in hex
 for i, round_key in enumerate(all_round_keys):
-    hex_output = deb_bck(round_key, hex_output=True)
+    hex_output = MatrixToHex(round_key, hex_output=True)
     print(f"Round {i}: {hex_output}")

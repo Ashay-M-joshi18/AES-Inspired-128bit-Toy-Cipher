@@ -1,5 +1,5 @@
 from core import (
-    rep, deb_bck, sub_bytes, shift_rows,
+    StringToMatrix, MatrixToHex, sub_bytes, shift_rows,
     getMixColumns, add_round_key,
     hex_to_matrix
 )
@@ -21,7 +21,7 @@ all_round_keys = generate_round_key(key_matrix)
 
 # -------- PRE-ROUND --------
 state = add_round_key(state, all_round_keys[0])
-print(f"Round 0 (After pre-round AddRoundKey): {deb_bck(state, hex_output=True)}\n")
+print(f"Round 0 (After pre-round AddRoundKey): {MatrixToHex(state, hex_output=True)}\n")
 
 # -------- ROUNDS 1 TO 9 --------
 for r in range(1, 10):
@@ -29,27 +29,27 @@ for r in range(1, 10):
     
     # SubBytes
     state = sub_bytes(state, inverse=False)
-    print(f"After SubBytes: {deb_bck(state, hex_output=True)}")
+    print(f"After SubBytes: {MatrixToHex(state, hex_output=True)}")
     
     # ShiftRows
     state = shift_rows(state)
-    print(f"After ShiftRows: {deb_bck(state, hex_output=True)}")
+    print(f"After ShiftRows: {MatrixToHex(state, hex_output=True)}")
     
     # MixColumns
     state = getMixColumns(state)
-    print(f"After MixColumns: {deb_bck(state, hex_output=True)}")
+    print(f"After MixColumns: {MatrixToHex(state, hex_output=True)}")
     
     # AddRoundKey
     state = add_round_key(state, all_round_keys[r])
-    print(f"After AddRoundKey {r}: {deb_bck(state, hex_output=True)}\n")
+    print(f"After AddRoundKey {r}: {MatrixToHex(state, hex_output=True)}\n")
 
 # -------- FINAL ROUND (ROUND 10) --------
 print(f"--- Round 10 (Final Round) ---")
 state = sub_bytes(state, inverse=False)
-print(f"After SubBytes: {deb_bck(state, hex_output=True)}")
+print(f"After SubBytes: {MatrixToHex(state, hex_output=True)}")
 
 state = shift_rows(state)
-print(f"After ShiftRows: {deb_bck(state, hex_output=True)}")
+print(f"After ShiftRows: {MatrixToHex(state, hex_output=True)}")
 
 state = add_round_key(state, all_round_keys[10])
-print(f"Final Ciphertext: {deb_bck(state, hex_output=True)}")
+print(f"Final Ciphertext: {MatrixToHex(state, hex_output=True)}")

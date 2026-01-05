@@ -1,5 +1,5 @@
 from core import (
-    rep, deb_bck, sub_bytes, shift_rows,
+    StringToMatrix, MatrixToHex, sub_bytes, shift_rows,
     getMixColumns, add_round_key,
     inv_shift_rows, inv_mix_columns,
     hex_to_matrix
@@ -16,14 +16,14 @@ def encrypt_ecb(message, master_key):
     blocks = split_into_blocks(message, size=16)
 
     # Generate round keys (11 keys: K0 to K10)
-    round_key_matrix = rep(master_key)
+    round_key_matrix = StringToMatrix(master_key)
     all_round_keys = generate_round_key(round_key_matrix)
 
     encrypted_blocks = []
 
     for block in blocks:
         # Initial state
-        state = rep(block)
+        state = StringToMatrix(block)
 
         # -------- PRE-ROUND --------
         state = add_round_key(state, all_round_keys[0])
@@ -41,7 +41,7 @@ def encrypt_ecb(message, master_key):
         state = add_round_key(state, all_round_keys[10])
 
         # Convert state to hex string
-        encrypted_blocks.append(deb_bck(state, hex_output=True))
+        encrypted_blocks.append(MatrixToHex(state, hex_output=True))
 
     # ECB returns concatenated ciphertext
     return "".join(encrypted_blocks)
@@ -56,7 +56,7 @@ def decrypt_ecb(ciphertext, master_key):
         raise ValueError("Ciphertext must contain only hexadecimal characters")
     blocks = split_into_blocks(ciphertext, size=32)
 
-    round_key_matrix = rep(master_key)
+    round_key_matrix = StringToMatrix(master_key)
     all_round_keys = generate_round_key(round_key_matrix)
 
     decrypted_blocks = []
@@ -79,7 +79,7 @@ def decrypt_ecb(ciphertext, master_key):
         # -------- INVERSE PRE-ROUND --------
         state = add_round_key(state, all_round_keys[0])
 
-        decrypted_blocks.append(deb_bck(state, hex_output=False))
+        decrypted_blocks.append(MatrixToHex(state, hex_output=False))
 
     # Remove padding / trailing spaces
     return "".join(decrypted_blocks).rstrip()

@@ -42,7 +42,7 @@ inv_sbox = [
 
 # ---------- STRING <-> MATRIX ----------
 
-def rep(S):
+def StringToMatrix(S):
     sarr = list(S)
     while len(sarr) < 16:
         sarr.append(" ")
@@ -55,7 +55,7 @@ def rep(S):
 
 # ---------- MATRIX <-> STRING / HEX ----------
 
-def deb_bck(matrix, hex_output=False):
+def MatrixToHex(matrix, hex_output=False):
     if not hex_output:
         s = ""
         for i in range(4):
