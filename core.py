@@ -43,10 +43,10 @@ inv_sbox = [
 # ---------- STRING <-> MATRIX ----------
 
 def StringToMatrix(S):
-    sarr = list(S)
-    while len(sarr) < 16:
-        sarr.append(" ")
-    vals = [ord(x) for x in sarr]
+    CharacterArray = list(S)
+    while len(CharacterArray) < 16:
+        CharacterArray.append(" ")
+    vals = [ord(x) for x in CharacterArray]
 
     matrix = []
     for i in range(4):

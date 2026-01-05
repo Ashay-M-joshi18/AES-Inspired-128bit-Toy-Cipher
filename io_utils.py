@@ -10,14 +10,14 @@ def split_into_blocks(message, size=16):
     Returns:
         list[str]: List of blocks of length `size`.
     """
-    sarr = list(message)
+    CharacterArray = list(message)
     blocks = []
 
     for _ in range((len(message) + size - 1) // size):
         temp_str = ""
         for _ in range(size):
-            if sarr:
-                temp_str += sarr.pop(0)
+            if CharacterArray:
+                temp_str += CharacterArray.pop(0)
         temp_str = temp_str.ljust(size)
         blocks.append(temp_str)
 
